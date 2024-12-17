@@ -1,0 +1,21 @@
+# Ignore node_modules folder
+node_modules/
+
+# Ignore log files
+*.log
+
+# Ignore all `.env` files
+*.env
+
+# Ignore compiled Python files
+*.pyc
+__pycache__/
+
+# Ignore IDE files
+.idea/
+.vscode/
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+*.-value.yaml

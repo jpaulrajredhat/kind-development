@@ -1,0 +1,6 @@
+mode: standalone
+rootUser: "minioAdmin"
+rootPassword: "minio1234"
+persistence:
+  enabled: false
+  annotations: {}

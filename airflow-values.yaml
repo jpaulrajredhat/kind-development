@@ -1,0 +1,81 @@
+executor: KubernetesExecutor
+
+airflow:
+  images:
+    repository: localairflow
+    tag: 1.0
+  # pullPolicy: Always # Use local image if it exists
+
+# dags:
+#   persistence:
+#     enabled: true
+#     size: 1Gi
+#     storageClassName: standard # Replace with your storage class
+#     # accessModes:
+#     #   - ReadWriteMany
+
+dags:
+  persistence:
+    enabled: false
+    # existingClaim: airflow-dags-pvc
+    # storageClassName: local-path
+  # path: /opt/airflow/dags
+#   mounts:
+#     - name: hostpath-dags
+#       mountPath: /opt/airflow/dags
+# extraVolumes:
+#   - name: hostpath-dags
+#     hostPath:
+#       path: /Users/jpaulraj/kind-development/dags # Path inside the Kind container
+#       type: Directory
+# extraVolumeMounts:
+#   - name: hostpath-dags
+#     mountPath: /opt/airflow/dags  # Path inside the container where DAGs are mounted
+
+logs:
+  persistence:
+    enabled: false
+    # existingClaim: airflow-logs-pvc
+    # storageClassName: local-storage
+  # path: /opt/airflow/logs
+scheduler:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+web:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+worker:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+flower:
+  enabled: false
+
+redis:
+  enabled: false
+
+postgresql:
+  enabled: true
+  persistence:
+    enabled: true
+    size: 1Gi
