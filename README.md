@@ -71,7 +71,7 @@ To deploy just **Minio**
     
 **Note :** Deploy script will deploys specific component's helm chart (Airflow, Trino & Minio ) and import specific component images to kind cluster and deploy the component, once its deployed successfully, forward the port to local host so that you can access localhost on your browser.
 
-**Exxmale :**
+**Example :**
 
     Aiflow : localhost:8080
     Trino  : localhost:8081
