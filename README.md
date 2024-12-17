@@ -42,48 +42,49 @@ All prerequisties are included in the kind install script. kind install script h
     chmod +x deploy.sh
     ```
 
-    To deploy **all data mesh** components. Before run deploy script read the notes below.
+To deploy **all data mesh** components. Before run deploy script read the notes below.
 
-        ```bash
-        ./deploy.sh all
-        ```
+    ```bash
+    ./deploy.sh all
+    ```
 
-    To deploy just **Airflow**
+To deploy just **Airflow**
 
         ```bash
         ./deploy.sh airflow
         ```
 
-    If you need to test your Aifflow dags, copy all dags to "/dafs" folder and build a image locally using release.sh script provided here. To make this chages effect, update environment varibales AIRFLOW_IMAGE="XXXX" and AIRFLOW_TAG="X.X" and execute " ./deploy.sh " with correspoding input parameter based on what are the componets that you want to deploy. 
+If you need to test your Aifflow dags, copy all dags to "/dafs" folder and build a image locally using release.sh script provided here. To make this chages effect, update environment varibales AIRFLOW_IMAGE="XXXX" and AIRFLOW_TAG="X.X" and execute " ./deploy.sh " with correspoding input parameter based on what are the componets that you want to deploy. 
     
-    If you make any changes on your exiting dags that need to be deployed , you need to build airflow image locally and update environment varibales AIRFLOW_IMAGE="XXXX" and AIRFLOW_TAG="X.X" to deploy.sh script and then run **deploy.sh airflow** .
+If you make any changes on your exiting dags that need to be deployed , you need to build airflow image locally and update environment varibales AIRFLOW_IMAGE="XXXX" and AIRFLOW_TAG="X.X" to deploy.sh script and then run **deploy.sh airflow** .
 
-    To deploy just **Trino**
+To deploy just **Trino**
 
-         ```bash
-        ./deploy.sh trino
-        ```
-    To deploy just **Minio**
-         ```bash
-        ./deploy.sh minio
-          ```
+    ```bash
+    ./deploy.sh trino
+    ```
+To deploy just **Minio**
+         
+    ```bash
+    ./deploy.sh minio
+    ```
     
-    **Note :** Deploy script will deploys specific component's helm chart (Airflow, Trino & Minio ) and import specific component images to kind cluster and deploy the component, once its deployed successfully, forward the port to local host so that you can access localhost on your browser.
+**Note :** Deploy script will deploys specific component's helm chart (Airflow, Trino & Minio ) and import specific component images to kind cluster and deploy the component, once its deployed successfully, forward the port to local host so that you can access localhost on your browser.
 
-    **Exxmale :**
+**Exxmale :**
 
     Aiflow : localhost:8080
     Trino  : localhost:8081
     Minio  : localhost:9000
 
-    **Delete** Kind Cluster :
+ **Delete** Kind Cluster :
 
-        ```bash
-        kind delete cluster --name osclimate-cluster 
-        ```
+    ```bash
+    kind delete cluster --name osclimate-cluster 
+    ```
 
-    **Destroy** Kind installation
+**Destroy** Kind installation
 
-       ```bash
-        ./install-kind.sh delete kind
-        ```
+    ```bash
+    ./install-kind.sh delete kind
+    ```
