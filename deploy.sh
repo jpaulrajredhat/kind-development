@@ -246,7 +246,7 @@ load_trino_image(){
     kind load docker-image $TRINO_IMAGE:$TRINO_TAG -n $KIND_CLUSTER
 
 }
-load_minio_imagae(){
+load_minio_image(){
     kind load docker-image $MINIO_IMAGE:$MINIO_TAG -n $KIND_CLUSTER
 
 }

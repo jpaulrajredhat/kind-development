@@ -45,8 +45,8 @@ EOF
     kind create cluster --name "$CLUSTER_NAME" --config "$CONFIG_FILE"
     echo "Cluster $CLUSTER_NAME created successfully."
     echo "Setting resource limits for Kind containers..."
-    docker update --cpus 2 --memory 4g --memory-swap 4g "$CLUSTER_NAME-control-plane"
-    docker update --cpus 2 --memory 4g --memory-swap 4g "$CLUSTER_NAME-worker"
+    docker update --cpus 3 --memory 6g --memory-swap 6g "$CLUSTER_NAME-control-plane"
+    docker update --cpus 3 --memory 6g --memory-swap 6g "$CLUSTER_NAME-worker"
   
   echo "Cluster created and resource limits applied."
 }

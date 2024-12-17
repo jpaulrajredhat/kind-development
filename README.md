@@ -6,7 +6,7 @@ Kind is ligt weight Kubernetes platform consume less reosuce so that developer c
 
 # Prerequisites
     
-    1.Dcoker
+    1.Docker
     2.Helm
 
 All prerequisties are included in the kind install script. kind install script has been tested with Mac and Linux environment. If any errors are occured during installtion, it could be local environment specific issue that need to addressed based on environment variation. 
