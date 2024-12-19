@@ -15,7 +15,7 @@ with DAG(
         name="airflow-test-pod",
         task_id="task-one",
         in_cluster=True,
-        is_delete_operator_pod=True,
+        is_delete_operator_pod=False,
         get_logs=True,
         service_account_name='airflow',
         log_events_on_failure=True,

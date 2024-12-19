@@ -26,6 +26,11 @@ All prerequisties are included in the kind install script. kind install script h
 
 **Step 2 :** Create a Cluster: You need to run this scrit only first time. 
 
+
+    ```bash
+    chmod +x kind-cluster.sh
+    ```
+
     ```bash
     ./kind-cluster.sh osclimate-cluster create
     ```
@@ -36,52 +41,63 @@ All prerequisties are included in the kind install script. kind install script h
     ```bash
     kubectl cluster-info --context osclimate-cluster
     ```
-**Step 4 :**  Datamesh components deployment. As of now , this deploymet script supports only Airflow,  Trino and Minio.
-
-    ```bash
-    chmod +x deploy.sh
-    ```
-
-To deploy **all data mesh** components. Before run deploy script read the notes below.
-
-    ```bash
-    ./deploy.sh all
-    ```
+**Step 4 :**  Datamesh components deployment. As of now , this deploymet script tested and supports only Airflow. Trino and Minio components are included but not tested completelty , will be supported later . 
 
 To deploy just **Airflow**
 
+    ```bash
+    chmod +x deploy.sh airflow
+
+    ```
+To check airflow pods successfully completed . run the following kubectl command 
+
+    ```bash
+    kubectl  get pods -n airflow
+    ```
+
+You should see all pod status running as shown below . Airflow deploy script deploys airflow and postgres database and creates required kubernetes manifest and forward POD port to local port 8080 so that airflow web can be accessed by localhost:8080.
+
+    NAME                        READY   STATUS    RESTARTS   AGE
+    airflow-7d9598446c-dzntc    2/2     Running   0          9m59s
+    postgres-5499cbdffb-47czt   1/1     Running   0          9m59s
+
+Once deployment completed successfuly, Airflow can access from web UI : http://localhost:8080
+
+User id     - admin
+password    - airflow123
+
+
+
+To deploy just **Minio**
+
         ```bash
-        ./deploy.sh airflow
+        ./deploy.sh minio
         ```
 
-If you need to test your Aifflow dags, copy all dags to "/dafs" folder and build a image locally using release.sh script provided here. To make this chages effect, update environment varibales AIRFLOW_IMAGE="XXXX" and AIRFLOW_TAG="X.X" and execute " ./deploy.sh " with correspoding input parameter based on what are the componets that you want to deploy. 
+If you need to test your Airflow dags, copy all dags to "/dafs" folder and run " ./deploy.sh airflow" 
     
-If you make any changes on your exiting dags that need to be deployed , you need to build airflow image locally and update environment varibales AIRFLOW_IMAGE="XXXX" and AIRFLOW_TAG="X.X" to deploy.sh script and then run **deploy.sh airflow** .
-
-To deploy just **Trino**
-
-    ```bash
-    ./deploy.sh trino
-    ```
-To deploy just **Minio**
-         
-    ```bash
-    ./deploy.sh minio
-    ```
     
 **Note :** Deploy script will deploys specific component's helm chart (Airflow, Trino & Minio ) and import specific component images to kind cluster and deploy the component, once its deployed successfully, forward the port to local host so that you can access localhost on your browser.
 
-**Example :**
+As of now , only Airflow component is tested.
 
     Aiflow : localhost:8080
     Trino  : localhost:8081
     Minio  : localhost:9000
 
- **Delete** Kind Cluster :
+ **Delete** Kind Cluster : 
+  
+  Note : osclimate-cluste is cluster name.
 
     ```bash
     kind delete cluster --name osclimate-cluster 
     ```
+    or 
+
+    ```bash
+    ./kind-cluster.sh osclimate-cluster delete 
+    ```
+
 
 **Destroy** Kind installation
 

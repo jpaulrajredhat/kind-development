@@ -22,8 +22,10 @@ MINIO_VALUES_FILE="minio-values.yaml"
 MINIO_RELEASE="minio"
 MINIO_VERSION="5.3.0"
 
-AIRFLOW_IMAGE="localairflow"
-AIRFLOW_TAG="1.2"
+# AIRFLOW_IMAGE="localairflow"
+# AIRFLOW_TAG="1.2"
+AIRFLOW_IMAGE="apache/airflow"
+AIRFLOW_TAG="2.9.3"
 
 MINIO_IMAGE="osclimate/minio"
 MINIO_TAG="1.0"
@@ -33,16 +35,14 @@ TRINO_TAG="1.1"
 # TRINO_IMAGE="trinodb/trino"
 # TRINO_TAG="467"
 
+# Set Airflow webserver port
+AIRFLOW_PORT=8080
+NAMESPACE="airflow"
+POD_LABEL="app=airflow"
+
 
 
 CURRENT_DIR=$(pwd)
-
-# LOG_PV="airflow-local-logs-folder-pv.yaml"
-# LOG_PVC="airflow-local-logs-folder-pvc.yaml"
-
-# DAGS_PV="airflow-local-dags-folder-pv.yaml"
-# DAGS_PVC="airflow-local-dags-folder-pvc.yaml"
-
 
 # Check for required tools
 check_dependencies() {
@@ -59,7 +59,10 @@ check_dependencies() {
 create_namespace() {
     echo "Creating namespace $NAMESPACE..."
     kubectl create namespace $NAMESPACE || echo "Namespace $NAMESPACE already exists."
-    kubectl apply -f service.yaml -n $NAMESPACE
+    kubectl apply -f $CURRENT_DIR/deployment/airflow/service-account.yaml -n $NAMESPACE
+    
+    # kubectl apply -f $CURRENT_DIR/deployment/airflow/airflow-role.yaml
+    # kubectl apply -f $CURRENT_DIR/deployment/airflow/airflow-rolebinding.yaml
     kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 
 }
@@ -68,13 +71,30 @@ create_namespace() {
 generate_airflow_values_file() {
     echo "Generating values file: $VALUES_FILE..."
     cat <<EOF > $VALUES_FILE
+
 executor: KubernetesExecutor
 
-airflow:
-  images:
-    repository: localairflow
-    tag: 1.0
-  # pullPolicy: Always # Use local image if it exists
+# airflow:
+#   images:
+#     repository: $AIRFLOW_IMAGE
+#     tag: $AIRFLOW_TAG
+#   # pullPolicy: Always # Use local image if it exists
+
+dags:
+  persistence:
+    enabled: true
+    existingClaim: airflow-dags-pvc  # Reference the PVC created earlier
+    # size: 1Gi  # Adjust if needed
+    accessMode: ReadWriteMany  # Same as PVC access mode
+    storageClass: "local-storage"  # Match the PVC's storage class
+  extraVolumes:
+  - name: hostpath-dags
+    hostPath:
+      path: $CURRENT_DIR/dags # Path inside the Kind container
+      type: Directory
+  extraVolumeMounts:
+  - name: hostpath-dags
+    mountPath: /opt/airflow/dags  # Path inside the container where DAGs are mounted
 
 # dags:
 #   persistence:
@@ -128,21 +148,24 @@ web:
       cpu: 500m
       memory: 512Mi
 
-worker:
-  replicas: 1
-  resources:
-    requests:
-      cpu: 100m
-      memory: 256Mi
-    limits:
-      cpu: 500m
-      memory: 512Mi
+# worker:
+#   replicas: 1
+#   resources:
+#     requests:
+#       cpu: 100m
+#       memory: 256Mi
+#     limits:
+#       cpu: 500m
+#       memory: 512Mi
 
-flower:
-  enabled: false
+# flower:
+#   enabled: false
 
-redis:
-  enabled: false
+# redis:
+#   enabled: false
+data:
+  metadataConnection:
+    connectionString: postgresql+psycopg2://airflow:airflow123$@postgres:5432/airflow
 
 postgresql:
   enabled: true
@@ -178,21 +201,80 @@ persistence:
   annotations: {}
 EOF
 }
+deploy_postgres_helm(){
 
+  helm repo add bitnami https://charts.bitnami.com/bitnami
+  helm repo update
+
+  helm install postgres bitnami/postgresql \
+  --namespace $NAMESPACE \
+  --set auth.database=airflow \
+  --set auth.username=airflow \
+  --set auth.password=airflow123$
+
+
+}
+
+deploy_postgres(){
+
+  kubectl apply -f $CURRENT_DIR/deployment/postgres/deployment-postgress.yaml -n $NAMESPACE
+  kubectl apply -f $CURRENT_DIR/deployment/postgres/service.yaml -n $NAMESPACE
+
+
+}
 # Deploy Airflow
 deploy_airflow() {
-    echo "Adding Helm repository for Airflow..."
-    helm repo add apache-airflow https://airflow.apache.org
-    helm repo update
+    # echo "Adding Helm repository for Airflow..."
+    # helm repo add apache-airflow https://airflow.apache.org
+    # helm repo update
 
-    echo "Deploying Airflow with Helm..."
-    helm upgrade --install $AIRFLOW_RELEASE apache-airflow/airflow \
-        --namespace $NAMESPACE \
-        --set images.airflow.repository=$AIRFLOW_IMAGE \
-        --set images.airflow.tag=$AIRFLOW_TAG \
-        --version $AIRFLOW_VERSION \
-        -f $VALUES_FILE
 
+    # echo "Deploying Airflow with Helm..."
+    # helm upgrade --install $AIRFLOW_RELEASE apache-airflow/airflow \
+    #     --namespace $NAMESPACE \
+    #     --set images.airflow.repository=$AIRFLOW_IMAGE \
+    #     --set images.airflow.tag=$AIRFLOW_TAG \
+    #     --version $AIRFLOW_VERSION \
+    #     -f $VALUES_FILE
+
+
+
+    kubectl apply -f $CURRENT_DIR/deployment/airflow/deployment-airflow-pv.yaml
+    kubectl apply -f $CURRENT_DIR/deployment/airflow/deployment-airflow-pvc.yaml -n $NAMESPACE
+
+    kubectl apply -f $CURRENT_DIR/deployment/airflow/deployment-airflow.yaml -n $NAMESPACE 
+    kubectl apply -f $CURRENT_DIR/deployment/airflow/airflow-service.yaml -n $NAMESPACE 
+    
+
+    # Deploy Airflow (replace with your YAML deployment file)
+    echo "Deploying Airflow..."
+
+    # Wait for at least one Airflow pod to exist
+    echo "Waiting for Airflow pod to appear in namespace $NAMESPACE..."
+
+    PORT=8080
+
+    echo "Checking for running Airflow pod..."
+    POD_NAME=$(kubectl get pods -n $NAMESPACE -l app=airflow -o jsonpath='{.items[0].metadata.name}')
+
+    if [ -z "$POD_NAME" ]; then
+      echo "No Airflow pod found. Exiting."
+      exit 1
+    fi
+
+    echo "Waiting for pod $POD_NAME to be ready..."
+    while [[ $(kubectl get pod $POD_NAME -n $NAMESPACE -o jsonpath='{.status.phase}') != "Running" ]]; do
+      echo "Pod $POD_NAME is not ready yet. Retrying..."
+      sleep 5
+    done
+
+    echo "Starting port-forwarding for pod $POD_NAME..."
+    nohup kubectl port-forward $POD_NAME $PORT:$PORT -n $NAMESPACE > port-forward.log 2>&1 &
+
+    echo "Port-forwarding started. Access Airflow at http://localhost:$PORT"
+
+    echo "Coping dags to airflow pod $POD_NAME..."
+    kubectl cp $CURRENT_DIR/dags airflow/$POD_NAME:/opt/airflow/
 
 }
 
@@ -284,24 +366,6 @@ port_forward_minio() {
     echo "MinIO UI is accessible at http://localhost:9000"
 }
 
-# Main Script
-# main() {
-#     check_dependencies
-#     create_namespace
-#     generate_airflow_values_file
-#     generate_trino_values_file
-#     generate_minio_values_file
-#     # generate_dags_pv_file
-#     # generate_dags_pvc_file
-#     # generate_log_pv_file
-#     # generate_log_pvc_file
-#     # create_pvc
-#     deploy_airflow
-#     deploy_trino
-#     deploy_minio
-#     verify_deployment
-#     port_forward
-# }
 
 # main
 main() {
@@ -311,11 +375,12 @@ main() {
     # Parse input arguments
     case "$1" in
         airflow)
-            generate_airflow_values_file
-            load_airflow_image
+            # generate_airflow_values_file
+            # load_airflow_image
+            deploy_postgres
             deploy_airflow
             verify_deployment
-            port_forward_airflow
+            # port_forward_airflow
             ;;
         trino)
             generate_trino_values_file
