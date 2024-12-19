@@ -68,6 +68,19 @@ password    - airflow123
 
 
 If you need to test your Airflow dags, copy all dags to "/dags" folder and re-run "./deploy.sh airflow" 
+    or 
+
+you can directly copy dags folder to the running POD using the following Kube CLI so that you don't need to re-deploy Airflow. 
+
+There is an another option thaty you can mount a dag folder to KIND cluster so that all dags will be available immediately without any other external action which is currently in progress.
+
+    ```bash
+    kubectl  get pods -n airflow
+    ```
+    ```bash
+    kubectl cp $CURRENT_DIR/dags airflow/$POD_NAME:/opt/airflow/
+    ```
+
 
 To deploy just **Minio**
 
