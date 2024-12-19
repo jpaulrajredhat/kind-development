@@ -67,23 +67,13 @@ User id     - admin
 password    - airflow123
 
 
+If you need to test your Airflow dags, copy all dags to "/dags" folder and re-run "./deploy.sh airflow" 
 
 To deploy just **Minio**
 
         ```bash
         ./deploy.sh minio
         ```
-
-If you need to test your Airflow dags, copy all dags to "/dafs" folder and run " ./deploy.sh airflow" 
-    
-    
-**Note :** Deploy script will deploys specific component's helm chart (Airflow, Trino & Minio ) and import specific component images to kind cluster and deploy the component, once its deployed successfully, forward the port to local host so that you can access localhost on your browser.
-
-As of now , only Airflow component is tested.
-
-    Aiflow : localhost:8080
-    Trino  : localhost:8081
-    Minio  : localhost:9000
 
  **Delete** Kind Cluster : 
   
