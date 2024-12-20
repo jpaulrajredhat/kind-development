@@ -17,7 +17,6 @@ with DAG(
         in_cluster=True,
         is_delete_operator_pod=False,
         on_finish_action="keep_pod",
-        deferrable=False,
         get_logs=True,
         service_account_name='airflow',
         log_events_on_failure=False,
