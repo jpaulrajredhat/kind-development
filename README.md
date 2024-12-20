@@ -72,7 +72,7 @@ If you need to test your Airflow dags, copy all dags to "/dags" folder and re-ru
 
 you can directly copy dags folder to the running POD using the following Kube CLI so that you don't need to re-deploy Airflow. 
 
-There is an another option thaty you can mount a dag folder to KIND cluster so that all dags will be available immediately without any other external action which is currently in progress.
+There is an another option that you can mount a dag folder to KIND cluster so that all dags will be available immediately without any other external action which is currently in progress.
 
     ```bash
     kubectl  get pods -n airflow
@@ -81,6 +81,19 @@ There is an another option thaty you can mount a dag folder to KIND cluster so t
     kubectl cp $CURRENT_DIR/dags airflow/$POD_NAME:/opt/airflow/
     ```
 
+**Note** some time port forward script may not be successfull due to pod slow start , in that case run port forward cli explicitly shown below.
+
+Verify that airflow pod and services are running using the following CLI before portward. 
+
+    ```bash
+    kubectl  get pods -n airflow
+    kubectl  get svc -n airflow
+    ```
+and then run the following CLI using service or pod to forward pod / service port 8080 to local port 8080
+
+     ```bash
+        kubectl port-forward svc/airflow-webserver 8080:8080 -n airflow
+    ```
 
 To deploy just **Minio**
 
