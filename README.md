@@ -39,7 +39,7 @@ All prerequisties are included in the kind install script. kind install script h
 **Step 3:** if Step 2 completed, verify cluster
 
     ```bash
-    kubectl cluster-info --context osclimate-cluster
+    kubectl cluster-info --context kind-osclimate-cluster
     ```
 **Step 4 :**  Datamesh components deployment. As of now , this deploymet script tested and supports only Airflow. Trino and Minio components are included but not tested completelty , will be supported later . 
 
