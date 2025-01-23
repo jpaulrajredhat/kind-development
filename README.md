@@ -55,7 +55,7 @@ Note : Before execute deploy.sh, make sure that all datamesh (Airflow , Minio an
 Example : AIRFLOW_IMAGE="apache/airflow" and AIRFLOW_TAG="<version>"
 
 
-To deploy just **Airflow** , to run all datamesh components pass param "all". To run individual components pass component name as parameter like deploy.sh all|airflow|trino|minino
+To deploy just **Airflow** , to run all datamesh components pass param "all". To run individual components pass component name as parameter like **deploy.sh all|airflow|trino|minino**
 
 ```bash
 chmod +x deploy.sh airflow
