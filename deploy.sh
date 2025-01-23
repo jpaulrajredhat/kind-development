@@ -274,7 +274,7 @@ deploy_airflow() {
     echo "Port-forwarding started. Access Airflow at http://localhost:$PORT"
 
     echo "Coping dags to airflow pod $POD_NAME..."
-    kubectl cp $CURRENT_DIR/dags airflow/$POD_NAME:/opt/airflow/
+    kubectl cp $CURRENT_DIR/dags $NAMESPACE/$POD_NAME:/opt/airflow/
 
 }
 
