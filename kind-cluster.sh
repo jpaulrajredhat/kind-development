@@ -4,7 +4,7 @@ CLUSTER_NAME=${1:-kind-cluster} # Default cluster name if not provided
 ACTION=${2:-create} # Action: create, delete, or status
 CONFIG_FILE="kind-config.yaml" # Default Kind config file
 CURRENT_DIR=$(pwd)
-NAMESPACE="airflow"
+NAMESPACE="osclimate"
 # Function to create a Kind cluster
 create_cluster() {
     echo "Creating Kind cluster: $CLUSTER_NAME..."

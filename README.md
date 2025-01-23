@@ -55,8 +55,7 @@ Note : Before execute deploy.sh, make sure that all datamesh (Airflow , Minio an
 Example : AIRFLOW_IMAGE="apache/airflow" and AIRFLOW_TAG="<version>"
 
 
-
-To deploy just **Airflow**
+To deploy just **Airflow** , to run all datamesh components pass param "all". To run individual components pass component name as parameter like deploy.sh all|airflow|trino|minino
 
 ```bash
 chmod +x deploy.sh airflow
@@ -64,7 +63,7 @@ chmod +x deploy.sh airflow
 To check airflow pods successfully completed . run the following kubectl command 
 
 ```bash
-kubectl  get pods -n airflow
+kubectl  get pods -n osclimate
 ```
 
 You should see all pod status running as shown below . Airflow deploy script deploys airflow and postgres database and creates required kubernetes manifest and forward POD port to local port 8080 so that airflow web can be accessed by localhost:8080.
@@ -87,7 +86,7 @@ you can directly copy dags folder to the running POD using the following Kube CL
 There is an another option that you can mount a dag folder to KIND cluster so that all dags will be available immediately without any other external action which is currently in progress.
 
 ```bash
-kubectl  get pods -n airflow
+kubectl  get pods -n osclimate
 ```
 ```bash
 kubectl cp $CURRENT_DIR/dags airflow/$POD_NAME:/opt/airflow/
@@ -98,13 +97,13 @@ kubectl cp $CURRENT_DIR/dags airflow/$POD_NAME:/opt/airflow/
 Verify that airflow pod and services are running using the following CLI before portward. 
 
 ```bash
-kubectl  get pods -n airflow
-kubectl  get svc -n airflow
+kubectl  get pods -n osclimate
+kubectl  get svc -n osclimate
 ```
 and then run the following CLI using service or pod to forward pod / service port 8080 to local port 8080
 
 ```bash
-kubectl port-forward svc/airflow-webserver 8080:8080 -n airflow
+kubectl port-forward svc/airflow-webserver 8080:8080 -n osclimate
 ```
 
 To deploy just **Minio**

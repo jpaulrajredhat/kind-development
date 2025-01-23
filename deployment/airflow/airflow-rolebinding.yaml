@@ -2,11 +2,11 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: airflow-pod-reader-binding
-  namespace: airflow
+  namespace: osclimate
 subjects:
 - kind: ServiceAccount
   name: default
-  namespace: airflow
+  namespace: osclimate
 roleRef:
   kind: Role
   name: airflow-pod-reader

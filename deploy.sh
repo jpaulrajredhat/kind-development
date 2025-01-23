@@ -5,7 +5,7 @@
 set -e
 
 # Globals
-NAMESPACE="airflow"
+NAMESPACE="osclimate"
 
 KIND_CLUSTER="osclimate-cluster"
 
@@ -37,7 +37,7 @@ TRINO_TAG="1.1"
 
 # Set Airflow webserver port
 AIRFLOW_PORT=8080
-NAMESPACE="airflow"
+# NAMESPACE="airflow"
 POD_LABEL="app=airflow"
 
 
