@@ -15,14 +15,16 @@ All prerequisties are included in the kind install script. kind install script h
 
 **Step 1 :** To Install Kind, run the script with the desired action: You need to run this scrit only first time.  If you want to desroy the deployment, there is the scri the cluster. 
 
-    ```bash
-    chmod +x install-kind.sh
-    ```
-   
-    ```bash
-    ./install-kind.sh install kind
+# Install Kind
 
-    ```
+```bash
+chmod +x install-kind.sh
+```
+   
+```bash
+./install-kind.sh install kind
+
+ ```
 
 **Step 2 :** Create a Cluster: You need to run this scrit only first time. 
 
