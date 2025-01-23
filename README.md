@@ -28,6 +28,11 @@ chmod +x install-kind.sh
 
 **Step 2 :** Create a Cluster: You need to run this scrit only first time. 
 
+Note : Modify host path and airflow dags folder specific to your enviroment in **kind-cluster.sh** 
+kind-config.yaml will be generated dynamically whe you run kind-cluster.sh.
+
+- hostPath: <home>/kind-development/dags   # Replace with your local directory
+        containerPath: /dags  # Path inside the Kind container
 
 ```bash
 chmod +x kind-cluster.sh
@@ -43,7 +48,13 @@ chmod +x kind-cluster.sh
 ```bash
 kubectl cluster-info --context kind-osclimate-cluster
  ```
-**Step 4 :**  Datamesh components deployment. As of now , this deploymet script tested and supports only Airflow. Trino and Minio components are included but not tested completelty , will be supported later . 
+**Step 4 :**  Datamesh components deployment. As of now , this deploymet script tested and supports only Airflow. 
+Trino and Minio components are included but not tested completelty , will be supported later . 
+
+Note : Before execute deploy.sh, make sure that all datamesh (Airflow , Minio and  Trino ) component images are avaialble in your local, if not, pull it on your local and update image name and version to  deploy.sh.
+Example : AIRFLOW_IMAGE="apache/airflow" and AIRFLOW_TAG="<version>"
+
+
 
 To deploy just **Airflow**
 

@@ -20,4 +20,7 @@ __pycache__/
 Thumbs.db
 *.-value.yaml
 kind-config.yaml
+airflow-values.yaml
+minio-values.yaml
+trino-values.yaml
 port-forward.log
