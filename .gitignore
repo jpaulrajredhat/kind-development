@@ -23,4 +23,4 @@ kind-config.yaml
 airflow-values.yaml
 minio-values.yaml
 trino-values.yaml
-port-forward.log
+*port-forward*.log

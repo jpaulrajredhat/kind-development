@@ -19,7 +19,7 @@ spec:
         runAsUser: 0
       initContainers:
       - name: init-airflow-db
-        image: apache/airflow:2.9.3
+        image: osclimate/airflow:2.9.3
         env:
         - name: AIRFLOW__CORE__EXECUTOR
           value: KubernetesExecutor
@@ -31,7 +31,7 @@ spec:
         imagePullPolicy: IfNotPresent
       containers:
       - name: airflow-webserver
-        image: apache/airflow:2.9.3
+        image: osclimate/airflow:2.9.3
         securityContext:
           runAsUser: 0
         args: [ "webserver" ]
@@ -49,7 +49,7 @@ spec:
         - name: airflow-dags
           mountPath: /opt/airflow/dags
       - name: scheduler
-        image: apache/airflow:2.9.3
+        image: osclimate/airflow:2.9.3
         securityContext:
           runAsUser: 0
         args:

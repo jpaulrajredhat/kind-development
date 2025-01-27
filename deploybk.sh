@@ -301,101 +301,48 @@ port_forward_minio() {
     kubectl port-forward svc/$MINIO_RELEASE 9000:9000 -n $NAMESPACE &
     echo "MinIO UI is accessible at http://localhost:9000"
 }
-delete_airflow(){
 
-  echo "Deleting Airflow..."
-  kubectl delete deployment airflow -n $NAMESPACE
-  kubectl delete svc airflow-webserver -n $NAMESPACE
-  kubectl delete pvc airflow-dags-pvc -n $NAMESPACE
-  kubectl delete pv airflow-dags-pv -n $NAMESPACE
 
-}
-delete_trino(){
-  echo "Deleting Trino..."
-  kubectl delete deployment trino -n $NAMESPACE
-  kubectl delete svc trino-service -n $NAMESPACE
-  kubectl delete configmap trino-config -n $NAMESPACE
-
-}
-
-delete_minio(){
-  echo "Deleting Minio..."
-  kubectl delete deployment minio -n $NAMESPACE
-  kubectl delete svc minio-service -n $NAMESPACE
-
-}
 # main
 main() {
     check_dependencies
     create_namespace
-
+    
     # Parse input arguments
     case "$1" in
-        deploy)
-            case "$2" in
-                airflow)
-                    load_airflow_image
-                    deploy_postgres
-                    deploy_airflow
-                    verify_deployment
-                    ;;
-                trino)
-                    load_trino_image
-                    deploy_trino
-                    verify_deployment
-                    ;;
-                minio)
-                    load_minio_image
-                    deploy_minio
-                    verify_deployment
-                    ;;
-                all)
-                    load_airflow_image
-                    deploy_postgres
-                    deploy_airflow
-                    load_trino_image
-                    deploy_trino
-                    load_minio_image
-                    deploy_minio
-                    verify_deployment
-                    ;;
-                *)
-                    echo "Usage: $0 deploy {airflow|trino|minio|all}"
-                    exit 1
-                    ;;
-            esac
+        airflow)
+            load_airflow_image
+            deploy_postgres
+            deploy_airflow
+            verify_deployment
             ;;
-        delete)
-            case "$2" in
-                airflow)
-                    delete_airflow
-                    ;;
-                trino)
-                    delete_trino
-                    ;;
-                minio)
-                    delete_minio
-                    ;;
-                all)
-                    echo "Deleting all deployments..."
-                    delete_airflow
-                    delete_trino
-                    delete_minio
-
-                    ;;
-                *)
-                    echo "Usage: $0 delete {airflow|trino|minio|all}"
-                    exit 1
-                    ;;
-            esac
+        trino)
+            load_trino_image
+            deploy_trino
+            verify_deployment
+            ;;
+        minio)
+            load_minio_image
+            deploy_minio
+            verify_deployment
+            ;;
+        all)
+            load_airflow_image
+            deploy_postgres
+            deploy_airflow
+            load_trino_image
+            deploy_trino
+            load_minio_image
+            deploy_minio
+            verify_deployment
             ;;
         *)
-            echo "Usage: $0 {deploy|delete} {airflow|trino|minio|all}"
+            echo "Usage: $0 {airflow|trino|minio|all}"
             exit 1
             ;;
     esac
 
-    echo "Operation complete."
+    echo "Deployment complete."
 }
 
 main "$@"
