@@ -13,13 +13,14 @@ All prerequisties are included in the kind install script. kind install script h
 
 # Installation
 
-**Step 1 :** To Install Kind, run the script with the desired action: You need to run this scrit only first time.  If you want to desroy the deployment, there is the scri the cluster. 
+**Step 1 :** To Install Kind, run the script with the desired action: You need to run this scrit only first time.  If you want to destroy the deployment, follow the instruction at the bottom of this README file. 
 
-# Install Kind
+# Install Kind , helm and Docker
 
 ```bash
 chmod +x install-kind.sh
 ```
+# Install only Kind
    
 ```bash
 ./install-kind.sh install kind
