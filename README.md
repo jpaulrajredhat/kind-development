@@ -33,7 +33,11 @@ chmod +x install-kind.sh
    
 ```bash
 ./install-kind.sh install kind
-
+ ```
+**Windows only** To take kind installation take effect in Windows environment 
+restart Git Bash or source your ~/.bashrc file."
+```bash
+source ~/.bashrc
  ```
 
 **Step 2 :** Create a Cluster: You need to run this scrit only first time. 
