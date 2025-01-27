@@ -4,26 +4,32 @@ kind is a tool for running local Kubernetes cluster using Docker container.
 kind was primarily designed for testing Kubernetes itself, but can be used for local development.
 Kind is ligt weight Kubernetes platform consume less reosuce so that developer can run most of the Data Mesh compoenrts locally and alos it is very close to target kubernetes platform like OpenShift . 
 
-# Prerequisites
+# Prerequisites - Mac & Linux 
     
     1.Docker
     2.Helm
 
 **Mac & Linux**
 All prerequisties are included in the kind install script. kind install script has been tested with Mac and Linux environment. If any errors are occured during installtion, it could be local environment specific issue that need to addressed based on environment variation. 
-**Windows**
+
+
+# Prerequisites - Windows
+    
+    1.Docker
+    2.Helm
+
 For Windows environment **Docker and Helm need** to be installed before running install-kind.sh. Kind install script only supports kind installation.  So, For Windows, run **./install-kind.sh install kind**.
 
-# Installation
+# Kind Installation
 
 **Step 1 :** To Install Kind, run the script with the desired action: You need to run this scrit only first time.  If you want to destroy the deployment, follow the instruction at the bottom of this README file. 
 
-# Install Kind , helm and Docker
+# Install Kind , helm and Docker (Mac &Linux)
 
 ```bash
 chmod +x install-kind.sh
 ```
-# Install only Kind
+# Install only Kind (Windows)
    
 ```bash
 ./install-kind.sh install kind
