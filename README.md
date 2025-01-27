@@ -9,7 +9,10 @@ Kind is ligt weight Kubernetes platform consume less reosuce so that developer c
     1.Docker
     2.Helm
 
+**Mac & Linux**
 All prerequisties are included in the kind install script. kind install script has been tested with Mac and Linux environment. If any errors are occured during installtion, it could be local environment specific issue that need to addressed based on environment variation. 
+**Windows**
+For Windows environment **Docker and Helm need** to be installed before running install-kind.sh. Kind install script only supports kind installation.  So, For Windows, run **./install-kind.sh install kind**.
 
 # Installation
 
