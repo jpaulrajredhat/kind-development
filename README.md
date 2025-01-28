@@ -29,7 +29,7 @@ For Windows environment **Docker and Helm need** need to be installed before run
 ./install-kind.sh install kind
  ```
 
- # Install Kind , helm and Docker (Mac &Linux ). **Don't use run for Windows environment.**
+ # Install Kind , helm and Docker (Mac &Linux ). 
 
 ```bash
 chmod +x install-kind.sh
