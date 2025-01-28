@@ -15,19 +15,22 @@ MINIO_TAG=osclimate/minio:1.0
 docker buildx ls | grep multiarch || docker buildx create --name multiarch --use
 
 docker buildx build  \
-    --platform linux/arm64 \
+    --platform linux/amd64 \
     --tag "$AIRFLOW_TAG" \
+    --load \
     .
 
 docker buildx build  \
     -f Dockerfile-trino \
-    --platform linux/arm64 \
+    --platform linux/amd64 \
     --tag "$TRINO_TAG" \
+    --load \
     .
 
 docker buildx build  \
     -f Dockerfile-minio \
     --platform linux/amd64 \
+    --load \
     --tag "$MINIO_TAG" \
     .
 # docker buildx build --push \

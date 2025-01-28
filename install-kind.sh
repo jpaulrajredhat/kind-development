@@ -31,16 +31,52 @@ install_docker() {
 }
 
 
+# install_kind() {
+#   if command -v kind >/dev/null 2>&1; then
+#     echo "Kind is already installed."
+#   else
+#     echo "Installing Kind version $KIND_VERSION..."
+#     OS=$(uname | tr '[:upper:]' '[:lower:]')
+#     ARCH=$(uname -m)
+
+#     # Determine architecture for Kind binary
+#     # if [[ "$ARCH" == "x86_64" ]]; then
+#     if [[ "$ARCH" == "x86_64" || "$ARCH" == "amd64" ]]; then
+#       ARCH="amd64"
+#     elif [[ "$ARCH" == "arm64" || "$ARCH" == "aarch64" ]]; then
+#       ARCH="arm64"
+#     else
+#       echo "Unsupported architecture: $ARCH"
+#       exit 1
+#     fi
+
+#     # Download the correct Kind binary based on the OS, architecture, and version
+#     KIND_URL="https://kind.sigs.k8s.io/dl/${KIND_VERSION}/kind-${OS}-${ARCH}"
+#     # KIND_URL="https://kind.sigs.k8s.io/dl/latest/kind-${OS}-${ARCH}"
+#     echo "Downloading Kind binary from $KIND_URL..."
+#     curl -Lo ./kind "$KIND_URL"
+
+#     # Make it executable and move it to /usr/local/bin
+#     chmod +x ./kind
+#     sudo mv ./kind /usr/local/bin/kind
+#     echo "Kind version $KIND_VERSION installed successfully."
+#   fi
+# }
 install_kind() {
   if command -v kind >/dev/null 2>&1; then
     echo "Kind is already installed."
   else
+    KIND_VERSION=${KIND_VERSION:-v0.20.0} # Default to a specific version if not set
     echo "Installing Kind version $KIND_VERSION..."
-    OS=$(uname | tr '[:upper:]' '[:lower:]')
-    ARCH=$(uname -m)
 
-    # Determine architecture for Kind binary
-    # if [[ "$ARCH" == "x86_64" ]]; then
+    # Detect OS
+    OS=$(uname | tr '[:upper:]' '[:lower:]')
+    if [[ "$OS" == "mingw"* || "$OS" == "cygwin"* ]]; then
+      OS="windows"
+    fi
+
+    # Detect architecture
+    ARCH=$(uname -m)
     if [[ "$ARCH" == "x86_64" || "$ARCH" == "amd64" ]]; then
       ARCH="amd64"
     elif [[ "$ARCH" == "arm64" || "$ARCH" == "aarch64" ]]; then
@@ -50,16 +86,27 @@ install_kind() {
       exit 1
     fi
 
-    # Download the correct Kind binary based on the OS, architecture, and version
+    # Set the Kind download URL
     KIND_URL="https://kind.sigs.k8s.io/dl/${KIND_VERSION}/kind-${OS}-${ARCH}"
-    # KIND_URL="https://kind.sigs.k8s.io/dl/latest/kind-${OS}-${ARCH}"
     echo "Downloading Kind binary from $KIND_URL..."
-    curl -Lo ./kind "$KIND_URL"
 
-    # Make it executable and move it to /usr/local/bin
-    chmod +x ./kind
-    sudo mv ./kind /usr/local/bin/kind
-    echo "Kind version $KIND_VERSION installed successfully."
+    # Download the Kind binary
+    curl -Lo kind "$KIND_URL"
+
+    # For Windows, add .exe extension
+    if [[ "$OS" == "windows" ]]; then
+      mv kind kind.exe
+      chmod +x kind.exe
+      # Add Kind to PATH (assuming Git Bash uses ~/.bashrc or similar)
+      export PATH="$PATH:$(pwd)"
+      echo 'export PATH="$PATH:$(pwd)"' >> ~/.bashrc
+      echo "Kind version $KIND_VERSION installed successfully. Please restart Git Bash or source your ~/.bashrc file."
+    else
+      # Make it executable and move to /usr/local/bin for Unix-like systems
+      chmod +x ./kind
+      sudo mv ./kind /usr/local/bin/kind
+      echo "Kind version $KIND_VERSION installed successfully."
+    fi
   fi
 }
 

@@ -4,36 +4,49 @@ kind is a tool for running local Kubernetes cluster using Docker container.
 kind was primarily designed for testing Kubernetes itself, but can be used for local development.
 Kind is ligt weight Kubernetes platform consume less reosuce so that developer can run most of the Data Mesh compoenrts locally and alos it is very close to target kubernetes platform like OpenShift . 
 
-# Prerequisites
+# Prerequisites - Mac & Linux 
     
     1.Docker
     2.Helm
 
-All prerequisties are included in the kind install script. kind install script has been tested with Mac and Linux environment. If any errors are occured during installtion, it could be local environment specific issue that need to addressed based on environment variation. 
+**Mac & Linux**
+All prerequisties are included in the kind install script. kind install script. If any errors are occured during installtion, it could be local environment specific issue that need to addressed based on environment variation. 
 
-# Installation
+# Prerequisites - Windows
+    
+    1.Docker
+    2.Helm
+
+For Windows environment **Docker and Helm need** need to be installed before running install-kind.sh. Kind install script only supports kind installation. For Windows, run **./install-kind.sh install kind**.
+
+# Kind Installation
 
 **Step 1 :** To Install Kind, run the script with the desired action: You need to run this scrit only first time.  If you want to destroy the deployment, follow the instruction at the bottom of this README file. 
 
-# Install Kind , helm and Docker
+# Install Kind ( Mac , Linux & windows)
+   
+```bash
+./install-kind.sh install kind
+ ```
+
+ # Install Kind , helm and Docker (Mac &Linux ). **Don't use run for Windows environment.**
 
 ```bash
 chmod +x install-kind.sh
 ```
-# Install only Kind
-   
-```bash
-./install-kind.sh install kind
+**Windows only** To kind installation take effect in Windows environment , restart Git Bash or source your ~/.bashrc file."
 
+```bash
+source ~/.bashrc
  ```
 
-**Step 2 :** Create a Cluster: You need to run this scrit only first time. 
+**Step 2 :** Create a Kind Cluster: You need to run this script only first time. 
 
-Note : Modify the host path and airflow dags folder specific to your enviroment in **kind-cluster.sh** 
-kind-config.yaml will be generated dynamically whe you run kind-cluster.sh.
+Note : Modify the host path and airflow dags folder specific to your enviroment in **kind-cluster.sh** .
+The kind-config.yaml will be generated dynamically when you run kind-cluster.sh.
 
-- hostPath: <home>/kind-development/dags   # Replace with your local directory
-        containerPath: /dags  # Path inside the Kind container
+"- hostPath: **<home>/kind-development/dags**   # Replace with your local directory
+        containerPath: /dags  # Path inside the Kind container"
 
 ```bash
 chmod +x kind-cluster.sh
@@ -43,18 +56,22 @@ chmod +x kind-cluster.sh
 ./kind-cluster.sh osclimate-cluster create
 ```
    
-**Step 3:** if Step 2 completed, verify cluster
+**Step 3:** once Step 2 completed, verify kind cluster is created successfully by runing the following script.
 
 ```bash
 kubectl cluster-info --context kind-osclimate-cluster
  ```
+
 **Step 4 :Datamesh components deployment.** Before start deploying, make sure that all datamesh (Airflow , Minio and  Trino ) component images are avaialble in your local machine. **deploy.sh** script will pull Airflow , Trino and minio images from remote repository and stored in local 
 
-**load all datamesh** component images on your local machine to Kind cluster execute **./release.sh** which is required for kind cluster. In order to deploy application to Kind, all images should be available to kind cluster. ./release.sh script load Aiflow , Trino and MinIo images to local machine .
+**load all datamesh** component images from your local machine to Kind cluster,  execute **./release.sh** which is required for kind cluster. In order to deploy application to Kind, all images should be available to kind cluster. 
+
+Execute the "./release.sh" script to load Aiflow , Trino and MinIo images to local machine .
 
 ```bash
 ./release.sh
 ```
+**Deploy Datamesh components to Kind clusterh**
 
 To deploy all datamesh components (Airflow , Trino and Mino) to kind cluster, execute  **./deploy.sh** script.
 
