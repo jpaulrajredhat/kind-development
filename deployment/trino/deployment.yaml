@@ -39,9 +39,14 @@ spec:
           mountPath: /etc/trino # Mounts configuration files
         - name: data-volume
           mountPath: /var/trino # Data storage (could be configured with persistent storage)
+        - name: catalog-volume
+          mountPath: /etc/trino/catalog
       volumes:
       - name: config-volume
         configMap:
           name: trino-config
       - name: data-volume
         emptyDir: {} # Can be replaced with PersistentVolumeClaim for production
+      - name: catalog-volume
+        configMap:
+          name: trino-catalog
