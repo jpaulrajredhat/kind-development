@@ -23,7 +23,7 @@ MINIO_RELEASE="minio"
 MINIO_VERSION="5.3.0"
 
 AIRFLOW_IMAGE="osclimate/airflow"
-AIRFLOW_TAG="2.9.3"
+AIRFLOW_TAG="2.9.4"
 
 MINIO_IMAGE="osclimate/minio"
 MINIO_TAG="1.0"
@@ -162,7 +162,6 @@ deploy_trino_helm() {
 # Deploy trino
 deploy_trino() {
     echo "Deploying Trino ..."
-    echo "Deploying Minio..."
 
     kubectl apply -f $CURRENT_DIR/deployment/trino/configmap.yaml -n $NAMESPACE 
     kubectl apply -f $CURRENT_DIR/deployment/trino/deployment.yaml -n $NAMESPACE 
@@ -192,6 +191,16 @@ deploy_trino() {
 
     echo "Port-forwarding started. Access Trino at http://localhost:$TRINO_PORT"
     
+}
+deploy_hive_metastore(){
+    echo "Deploying Hive metastore ..."
+    kubectl apply -f $CURRENT_DIR/deployment/hive-metastore/secret.yaml -n $NAMESPACE 
+    kubectl apply -f $CURRENT_DIR/deployment/hive-metastore/deployment-postgress.yaml -n $NAMESPACE 
+    kubectl apply -f $CURRENT_DIR/deployment/hive-metastore/service-postgres.yaml -n $NAMESPACE 
+
+    kubectl apply -f $CURRENT_DIR/deployment/hive-metastore/deployment.yaml -n $NAMESPACE 
+    kubectl apply -f $CURRENT_DIR/deployment/hive-metastore/service.yaml -n $NAMESPACE 
+
 }
 
 # Deploy minio
@@ -341,6 +350,7 @@ main() {
                     ;;
                 trino)
                     load_trino_image
+                    deploy_hive_metastore
                     deploy_trino
                     verify_deployment
                     ;;
@@ -354,6 +364,7 @@ main() {
                     deploy_postgres
                     deploy_airflow
                     load_trino_image
+                    deploy_hive_metastore
                     deploy_trino
                     load_minio_image
                     deploy_minio
