@@ -38,17 +38,18 @@ spec:
           protocol: TCP
         - containerPort: 9001
           protocol: TCP
-      # initContainers:
-      # - name: configure-mc
-      #   image: osclimate/minio:1.0
-      #   command:
-      #   - /bin/sh
-      #   - -c
-      #   - |
-      #     mc alias set myminio http://localhost:9000 minioAdmin minio1234
-      #     mc admin config set myminio api web_cors="*"
-      #   env:
-      #   - name: MINIO_ROOT_USER
-      #     value: "minioAdmin"
-      #   - name: MINIO_ROOT_PASSWORD
-      #     value: "minio1234"
+      initContainers:
+      - name: configure-mc
+        image: osclimate/minio:1.0
+        command:
+        - /bin/sh
+        - -c
+        - |
+          mc alias set myminio http://localhost:9000 minioAdmin minio1234
+          # mc admin config set myminio api web_cors="*"
+          mc mb myminio/pcaf || echo "Bucket already exists"
+        # env:
+        # - name: MINIO_ROOT_USER
+        #   value: "minioAdmin"
+        # - name: MINIO_ROOT_PASSWORD
+        #   value: "minio1234"

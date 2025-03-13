@@ -23,7 +23,7 @@ MINIO_RELEASE="minio"
 MINIO_VERSION="5.3.0"
 
 AIRFLOW_IMAGE="osclimate/airflow"
-AIRFLOW_TAG="2.9.4"
+AIRFLOW_TAG="2.9.3"
 
 MINIO_IMAGE="osclimate/minio"
 MINIO_TAG="1.0"
@@ -141,7 +141,7 @@ deploy_airflow() {
     echo "Port-forwarding started. Access Airflow at http://localhost:$PORT"
 
     echo "Coping dags to airflow pod $AIRFLOW_POD_NAME..."
-    kubectl cp $CURRENT_DIR/dags $NAMESPACE/$AIRFLOW_POD_NAME:/opt/airflow/
+    #kubectl cp $CURRENT_DIR/dags $NAMESPACE/$AIRFLOW_POD_NAME:/opt/airflow/
 
 }
 
@@ -289,8 +289,8 @@ create_pvc(){
 port_forward(){
 
   kubectl port-forward svc/airflow-webserver 8080:8080 -n osclimate & \
-  kubectl port-forward svc/trino-service 8081:8080 -n osclimate & \
-  kubectl port-forward svc/minio-service 9001:9001 -n osclimate $
+  kubectl port-forward svc/trino 8081:8080 -n osclimate & \
+  kubectl port-forward svc/minio 9001:9001 -n osclimate $
 }
 
 port_forward_airflow() {
@@ -322,7 +322,7 @@ delete_airflow(){
 delete_trino(){
   echo "Deleting Trino..."
   kubectl delete deployment trino -n $NAMESPACE
-  kubectl delete svc trino-service -n $NAMESPACE
+  kubectl delete svc trino -n $NAMESPACE
   kubectl delete configmap trino-config -n $NAMESPACE
 
 }
@@ -330,7 +330,7 @@ delete_trino(){
 delete_minio(){
   echo "Deleting Minio..."
   kubectl delete deployment minio -n $NAMESPACE
-  kubectl delete svc minio-service -n $NAMESPACE
+  kubectl delete svc minio -n $NAMESPACE
 
 }
 # main
