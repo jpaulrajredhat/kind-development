@@ -191,5 +191,4 @@ To deploy just **Minio**
 ```
 
 # Deploy Dags to Data Mesh platform
-![dags-deployment.png]
-
+![deploy airflow dags to datamesh paltform](dags-deployment.png)
