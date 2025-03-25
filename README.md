@@ -190,6 +190,6 @@ To deploy just **Minio**
 ./install-kind.sh delete kind
 ```
 
-# Depkoy Dags to Data Mesh platform
-![dags-deployment.jpeg]
+# Deploy Dags to Data Mesh platform
+![dags-deployment.png]
 
