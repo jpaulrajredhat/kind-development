@@ -183,8 +183,13 @@ To deploy just **Minio**
 ./kind-cluster.sh osclimate-cluster delete 
 ```
 
+
 **Destroy** Kind installation
 
 ```bash
 ./install-kind.sh delete kind
 ```
+
+# Depkoy Dags to Data Mesh platform
+![dags-deployment.jpeg]
+
