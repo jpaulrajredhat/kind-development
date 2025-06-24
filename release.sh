@@ -7,15 +7,14 @@ set -euo pipefail
 # DEFAULT_TAG=quay.io/osclimate/localairflow:1.2
 # DEFAULT_TAG=osclimate/trino:1.1
 AIRFLOW_TAG=osclimate/airflow:2.9.4
-# TRINO_TAG=osclimate/trino:1.0
-# MINIO_TAG=osclimate/minio:1.0
+TRINO_TAG=osclimate/trino:1.0
+MINIO_TAG=osclimate/minio:1.0
 # DEFAULT_TAG=osclimate/minio:1.0
 # TAG=${TAG:-$DEFAULT_TAG}
 
 docker buildx ls | grep multiarch || docker buildx create --name multiarch --use
 
 docker buildx build  \
-<<<<<<< HEAD
     --platform linux/arm64 \
     --tag "$AIRFLOW_TAG" \
     --load \
@@ -32,10 +31,6 @@ docker buildx build  \
     -f Dockerfile-minio \
     --platform linux/amd64 \
     --tag "$MINIO_TAG" \
-=======
-    --platform linux/amd64 \
-    --tag "$AIRFLOW_TAG" \
->>>>>>> refs/remotes/origin/main
     --load \
     .
 
