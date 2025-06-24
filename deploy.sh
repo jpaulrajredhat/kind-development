@@ -334,23 +334,23 @@ main() {
         deploy)
             case "$2" in
                 airflow)
-                    load_airflow_image
+                    # load_airflow_image
                     deploy_postgres
                     deploy_airflow
                     verify_deployment
                     ;;
                 trino)
-                    load_trino_image
+                    # load_trino_image
                     deploy_trino
                     verify_deployment
                     ;;
                 minio)
-                    load_minio_image
+                    # load_minio_image
                     deploy_minio
                     verify_deployment
                     ;;
                 all)
-                    load_airflow_image
+                    # load_airflow_image
                     deploy_postgres
                     deploy_airflow
                     load_trino_image

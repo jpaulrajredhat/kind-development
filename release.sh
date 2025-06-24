@@ -17,18 +17,21 @@ docker buildx ls | grep multiarch || docker buildx create --name multiarch --use
 docker buildx build  \
     --platform linux/arm64 \
     --tag "$AIRFLOW_TAG" \
+    --load \
     .
 
 docker buildx build  \
     -f Dockerfile-trino \
     --platform linux/arm64 \
     --tag "$TRINO_TAG" \
+    --load \
     .
 
 docker buildx build  \
     -f Dockerfile-minio \
     --platform linux/amd64 \
     --tag "$MINIO_TAG" \
+    --load \
     .
 # docker buildx build --push \
 #     --platform linux/arm64,linux/amd64 \

@@ -19,7 +19,7 @@ spec:
         runAsUser: 0
       initContainers:
       - name: init-airflow-db
-        image: osclimate/airflow:2.9.3
+        image: apache/airflow:2.9.3
         env:
         - name: AIRFLOW__CORE__EXECUTOR
           value: KubernetesExecutor
@@ -27,11 +27,15 @@ spec:
           value: airflow
         - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
           value: postgresql+psycopg2://airflow:airflow123$@postgres:5432/airflow
-        command: [ "sh", "-c", "airflow db init && airflow users create --username admin --password airflow123 --firstname Admin --lastname User --role Admin --email admin@example.com" ]
+        # - name: _PIP_ADDITIONAL_REQUIREMENTS
+        #   value: apache-airflow-providers-trino
+        # command: [ "sh", "-c", "airflow db init && airflow users create --username admin --password airflow123 --firstname Admin --lastname User --role Admin --email admin@example.com" ]
+        command: [ "bash", "-c", "airflow db init && airflow users create --username admin --password airflow123 --firstname Admin --lastname User --role Admin --email admin@example.com" ]
+
         imagePullPolicy: IfNotPresent
       containers:
       - name: airflow-webserver
-        image: osclimate/airflow:2.9.3
+        image: apache/airflow:2.9.3
         securityContext:
           runAsUser: 0
         args: [ "webserver" ]
@@ -42,6 +46,8 @@ spec:
           value: airflow
         - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
           value: postgresql+psycopg2://airflow:airflow123$@postgres:5432/airflow
+        # - name: _PIP_ADDITIONAL_REQUIREMENTS
+        #   value: apache-airflow-providers-trino
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
@@ -49,7 +55,7 @@ spec:
         - name: airflow-dags
           mountPath: /opt/airflow/dags
       - name: scheduler
-        image: osclimate/airflow:2.9.3
+        image: apache/airflow:2.9.3
         securityContext:
           runAsUser: 0
         args:
@@ -61,8 +67,11 @@ spec:
           value: "LocalExecutor"
         - name: AIRFLOW__WEBSERVER__SECRET_KEY
           value: airflow
+          # - name: _PIP_ADDITIONAL_REQUIREMENTS
+          # value: apache-airflow-providers-trino
         - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
           value: "postgresql+psycopg2://airflow:airflow123$@postgres:5432/airflow"
+        imagePullPolicy: IfNotPresent
         volumeMounts:
         - name: airflow-dags
           mountPath: /opt/airflow/dags
