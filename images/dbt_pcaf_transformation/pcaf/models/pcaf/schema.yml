@@ -1,0 +1,287 @@
+version: 2
+
+sources:
+  - name: pcaf
+    database: hive  
+    tables:
+      - name: primap
+        description: "PRIMAP data source"
+      - name: primap_wo_lulucf
+        description: "PRIMAP data source, does not contain LULUCF data"
+      - name: annexi
+        description: "UNFCCC annexi data source"
+      - name: non_annexi
+        description: "UNFCCC non-annexi data source"
+      - name: worldbank
+        description: "WDI data source"
+      - name: oecd
+        description: "OECD data source"
+      - name: pycountry
+        description: 'country dimension created with python module pycountry'
+
+models:
+
+  - name: pcaf_countries    
+    description: "Slim country dimension used in the calculation. "
+    columns: 
+      - name: country_iso3_code
+        description: Identifies a country by iSO3 standard.
+      - name: country_iso2_code
+        description: Identifies a country by iSO2 standard.
+      - name: country_name
+        description: Official country name.
+
+  - name: pcaf_primap    
+    description: "Unpivoted data of the PRIMAP-hist national historical emissions time series v2.4.1 (1750-2021). Contains data from 1960-2021"
+    owner: testteam
+    domain: testteam
+    columns:
+      - name: scr_indicator
+        description: "Guetschow-et-al-2022-PRIMAP-hist_v2.4_11-Oct-2022.csv"
+      - name: data_provider
+        description: "PRIMAP"
+      - name: country_iso_code
+        description: "ISO-3166 Country Code (alpha_3)"
+      - name: country_name 
+        description: "ISO-3166 Country Name"
+      - name: attribute
+        description: "KYOTOGHG (AR4GWP100)"
+      - name: value
+        description: "value of GDP or GDP PPP"
+      - name: value_units
+        description: "kt CO2 / a"
+      - name: validity_date
+        description: "Year of measurement"
+    config:
+      tags: 
+        - "annual"  
+        - "PRIMAP"
+    meta: 
+      data provider: 'PRIMAP'
+      title: "The PRIMAP-hist national historical emissions time series (1960-2021) v2.4"
+      author: "Gütschow, J.; Jeffery, L.; Gieseke, R.; Gebel, R.; Stevens, D.; Krapp, M.; Rocha, M."
+      contact: "github.com/JGuetschow/PRIMAP-hist"
+      release_date: "2022-10-17, 2022 00:00:00" 
+      team: "datacommons"
+
+  - name: pcaf_primap_staging
+    description: "Gütschow, J.; Pflüger, M. (2023): The PRIMAP-hist national historical emissions time series v2.4.1 (1750-2021). zenodo. doi:10.5281/zenodo.7585420. Contains data from 1960 - 2021"  
+    columns:
+      - name: country_iso_code
+        description: "ISO-3166 Country Code (alpha_3)"
+      - name: scenario 
+        description: "Different scenarios"
+      - name: attribute
+        description: "Different attributes"
+      - name: source
+        description: "Attribute source"
+      - name: category
+        description: "Different Categories"
+    config:
+      tags: 
+        - "annual"  
+        - "PRIMAP"
+    meta:
+      data provider: 'PRIMAP'
+      title: "The PRIMAP-hist national historical emissions time series (1960-2021) v2.4"
+      description: "Gütschow, J.; Pflüger, M. (2023): The PRIMAP-hist national historical emissions time series v2.4.1 (1750-2021). zenodo. doi:10.5281/zenodo.7585420. Contains data from 1960 - 2021"
+      author: "Gütschow, J.; Jeffery, L.; Gieseke, R.; Gebel, R.; Stevens, D.; Krapp, M.; Rocha, M."
+      contact: "github.com/JGuetschow/PRIMAP-hist"
+      release_date: "2022-10-17, 2022 00:00:00"
+      team: "datacommons"
+
+  - name: pcaf_wdi
+    description: "This indicator provides per capita values for gross domestic product (GDP) expressed in current international dollars converted by purchasing power parity (PPP) conversion factor. GDP is the sum of gross value added by all resident producers in the country plus any product taxes and minus any subsidies not included in the value of the products. conversion factor is a spatial price deflator and currency converter that controls for price level differences between countries. Total population is a mid-year population based on the de facto definition of population, which counts all residents regardless of legal status or citizenship."     
+    columns:
+      - name: scr_indicator
+        description: "API_NY.GDP.MKTP.CD_DS2_en_csv_v2.csv and API_NY.GDP.MKTP.PP.CD_DS2_en_csv_v2.csv"
+      - name: data_provider
+        description: "WDI"
+      - name: country_iso_code
+        description: "ISO-3166 Country Code (alpha_3)"
+      - name: country_name 
+        description: "ISO-3166 Country Name"
+      - name: attribute
+        description: "GDP or GDP PPP"
+      - name: value
+        description: "value of GDP or GDP PPP"
+      - name: value_units
+        description: "USD"
+      - name: validity_date
+        description: "Year of measurement"
+    config:
+      tags:   
+        - "WDI" 
+    meta:
+      data provider: 'WDI'
+      title: "World Bank GDP per capita, PPP (current international $)"
+      author: "International Comparison Program, World Bank | World Development Indicators database, World Bank | Eurostat-OECD PPP Programme."
+      contact: "data@worldbank.org"
+      release_date: "2022-01-01 00:00:00"
+      owner: "testteam"
+      database: "hive"
+      schema: pcaf"
+
+  - name: pcaf_wdi_staging
+    description: "This indicator provides per capita values for gross domestic product (GDP) expressed in current international dollars converted by purchasing power parity (PPP) conversion factor. GDP is the sum of gross value added by all resident producers in the country plus any product taxes and minus any subsidies not included in the value of the products. conversion factor is a spatial price deflator and currency converter that controls for price level differences between countries. Total population is a mid-year population based on the de facto definition of population, which counts all residents regardless of legal status or citizenship." 
+    columns:
+      - name: country_iso_code
+        description: "ISO-3166 Country Code (alpha_3)"
+      - name: country_name 
+        description: "ISO-3166 Country Name"
+      - name: attribute
+        description: "Different attributes"
+      - name: attribute_code
+        description: "Different attribute codes"
+    config:
+      tags: 
+        - "WDI"
+    meta: 
+      data provider: 'WDI'
+      title: "World Bank GDP per capita, PPP (current international $)"
+      description: "This indicator provides per capita values for gross domestic product (GDP) expressed in current international dollars converted by purchasing power parity (PPP) conversion factor. GDP is the sum of gross value added by all resident producers in the country plus any product taxes and minus any subsidies not included in the value of the products. conversion factor is a spatial price deflator and currency converter that controls for price level differences between countries. Total population is a mid-year population based on the de facto definition of population, which counts all residents regardless of legal status or citizenship."
+      author: "International Comparison Program, World Bank | World Development Indicators database, World Bank | Eurostat-OECD PPP Programme."
+      contact: "data@worldbank.org"
+      release_date: "2022-01-01 00:00:00"
+      team: "datacommons"
+
+  - name: pcaf_oecd_sovereign_emissions
+    descripions: "GHG Scope2 and GHG Scope3 data, calcuated based on OECD data"
+    columns:
+    - name: country_iso3_code
+      description: "country_iso3_code"
+    - name: validity_date
+      description: "Validity date of GHG data points"
+    - name: scope2_value
+      description: "GHG scope2 value"
+    - name: scope3_value
+      description: "GHG scope3 value"
+    - name: exported_emissions_value
+      description: "exported_emissions_value"
+    - name: partial_consumption_value
+      description: "partial_consumption_value"
+
+
+  - name: pcaf_primap_sovereign_emissions
+    description: "The PRIMAP-hist dataset combines several published datasets to create a comprehensive set of greenhouse gas emission pathways for every country and Kyoto gas covering the years from 1750 to 2022, and all UNFCCC (United Nations Framework Convention on Climate Change) member states, as well as most non-UNFCCC territories. Subsector data for Energy, Industrial Processes and Agriculture is available for CO2, CH4, and N2O. Due to data availability and methodological issues, the data for land use, land use change, and forestry (LULUCF) of the PRIMAP-hist dataset has to be used with extra care. "
+    columns:
+      - name: country_iso3_code
+        description: "ISO-3166 Country Code (alpha_3)"
+      - name: validity_date
+        description: "Year of measurement"
+      - name: ghg_total_with_lulucf
+        description: "if not NULL, GHG total including LULUCF"
+      - name: ghg_total_with_lulucf_units
+        description: "kt CO2eq"
+      - name: ghg_total_without_lulucf
+        description: "if not NULL, GHG total excluding LULUCF"
+      - name: ghg_total_without_lulucf_units
+        description: "kt CO2eq"
+      - name: scope1_excl_source
+        description: "PRIMAP or NULL"
+      - name: gdp
+        description: "Gross Domestic Product"
+      - name: gdp_units
+        description: "USD"
+      - name: gdp_ppp
+        description: "Gross Domestic Product, normalized to Purchasing Power Parity"
+      - name: gdp_ppp_units
+        description: "USD"
+      - name: ghg_intensity_with_lulucf_per_gdp
+        description: "GHG tons including LULUCH divided by GDP"
+      - name: ghg_intensity_with_lulucf_per_gdp_units
+        description: "kt CO2e / USD"
+      - name: ghg_intensity_without_lulucf_per_gdp
+        description: "GHG tons excluding LULUCH divided by GDP"
+      - name: ghg_intensity_without_lulucf_per_gdp_units
+        description: "kt CO2e / USD"
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - country_iso3_code
+            - validity_date
+    config:
+      tags: "Primap" 
+    meta:
+      data provider: 'Primap-hist'
+      title: 'UNFCCC sovereign emissions by country and year'
+      author: 'Gütschow, Johannes; Jeffery, M. Louise; Gieseke, Robert; Gebel, Ronja; Stevens, David; Krapp, Mario; Rocha, Marcia (2016): The PRIMAP-hist national historical emissions time series, Earth Syst. Sci. Data, 8, 571-603, https://doi.org/10.5194/essd-8-571-2016'
+      contact: ''
+      release_date: '2022-01-01 00:00:00'
+      team: "datacommons"
+
+  - name: pcaf_total_sovereign_emissions
+    description: 'Final PCAF dataset, combines OECD, Primat and Worldbank data'
+    columns: 
+    - name: validity_date
+      description: "validity_date"
+    - name: country_iso3_code
+      description: "country_iso3_code"
+    - name: scope1_incl_lulucf
+      description: "GHG total including LULUCF"
+    - name: ghg_total_with_lulucf_units
+      description: "kt CO2e"
+    - name: scope1_excl_lulucf
+      description: "GHG total excluding LULUCF"
+    - name: ghg_total_without_lulucf_units
+      description: "kt CO2e"
+    - name: scope1_excl_source
+      description: "Source of scope1"
+    - name: gdp
+      description: "Gross domain product"
+    - name: gdp_units
+      description: "USD"
+    - name: gdp_ppp
+      description: "Gross domain product PPP"
+    - name: gdp_ppp_units
+      description: "USD"
+    - name: ghg_intensity_with_lulucf_per_gdp
+      description: "GHG tons including LULUC divided by GDP"
+    - name: ghg_intensity_with_lulucf_per_gdp_units
+      description: "kt CO2e / USD"
+    - name: ghg_intensity_without_lulucf_per_gdp
+      description: "GHG tons not including LULUCF divided by GDP"
+    - name: ghg_intensity_without_lulucf_per_gdp_units
+      description: "kt CO2e / USD"
+    - name: scope2_value
+      description: "Scope2 GHG"
+    - name: scope2_date
+      description: "Validity date of the scope2 source data"
+    - name: scope3_value
+      description: "Scope3 GHG"
+    - name: scope3_date
+      description: "Validity date of the scope3 source data"
+    - name: exported_emissions_value
+      description: "exported_emissions_value"
+    - name: partial_consumption_value
+      description: "artial_consumption_value"
+    - name: population_value
+      description: "population_value"
+    - name: partial_population
+      description: "partial_population"
+    - name: calc_attr_factor_yn
+      description: "calc_attr_factor_yn"
+    - name: attr_partial_gdp_ppp
+      description: "attr_partial_gdp_ppp"
+    - name: attr_partial_gdp
+      description: "attr_partial_gdp"
+    - name: consumption_emissions_excl_lulucf
+      description: "onsumption_emissions_excl_lulucf"
+    - name: consumption_emissions_incl_lulucf
+      description: "consumption_emissions_incl_lulucf"
+    - name: consumption_emissions_excl_lulucf_per_capita
+      description: "consumption_emissions_excl_lulucf_per_capita"
+    - name: consumption_emissions_incl_lulucf_per_capita
+      description: "onsumption_emissions_incl_lulucf_per_capita"
+    - name: attribution_factor_scope1_excl_lulucf
+      description: "attribution_factor_scope1_excl_lulucf"
+    - name: attribution_factor_scope1_incl_lulucf
+      description: "attribution_factor_scope1_incl_lulucf"
+    - name: attribution_factor_excl_lulucf
+      description: "attribution_factor_excl_lulucf"
+    - name: attribution_factor_incl_lulucf
+      description: "attribution_factor_incl_lulucf"
+    - name: attribution_factor_excl_lulucf_gdp
+      description: "attribution_factor_excl_lulucf_gdp"
+    - name: attribution_factor_incl_lulucf_gdp
+      description: "ttribution_factor_incl_lulucf_gdp"
